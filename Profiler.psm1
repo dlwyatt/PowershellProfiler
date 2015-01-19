@@ -111,7 +111,7 @@ function New-ProfilerBreakpoint
         Action = {
             $now = [datetime]::UtcNow
 
-            $key = "$($_.File):$($_.Line)"
+            $key = "$($_.Script):$($_.Line)"
             $object = $script:ExecutionLog[$key]
 
             if ($null -eq $object)
