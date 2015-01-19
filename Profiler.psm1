@@ -73,7 +73,7 @@ function Get-ProfilerReport
         [pscustomobject] @{
             File              = $group.File
             Line              = $group.Line
-            TotalMilliseconds = [math]::Round($group.TotalMS, 2)
+            TotalMilliseconds = [int]$group.TotalMS
             PercentTime       = [math]::Round(100 * $group.TotalMS / $totalMS, 2)
             HitCount          = $group.HitCount
             PercentHitCount   = [math]::Round(100 * $group.HitCount / $TotalCount, 2)
