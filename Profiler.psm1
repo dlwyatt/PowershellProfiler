@@ -68,15 +68,15 @@ function Get-ProfilerReport
 
     $totalMS = $TotalTime.TotalMilliseconds
 
-    foreach ($group in $ExecutionLog.Values)
+    foreach ($lineInfo in $ExecutionLog.Values)
     {
         [pscustomobject] @{
-            File              = $group.File
-            Line              = $group.Line
-            TotalMilliseconds = [int]$group.TotalMS
-            PercentTime       = [math]::Round(100 * $group.TotalMS / $totalMS, 2)
-            HitCount          = $group.HitCount
-            PercentHitCount   = [math]::Round(100 * $group.HitCount / $TotalCount, 2)
+            File              = $lineInfo.File
+            Line              = $lineInfo.Line
+            TotalMilliseconds = [int]$lineInfo.TotalMS
+            PercentTime       = [math]::Round(100 * $lineInfo.TotalMS / $totalMS, 2)
+            HitCount          = $lineInfo.HitCount
+            PercentHitCount   = [math]::Round(100 * $lineInfo.HitCount / $TotalCount, 2)
         }
     }
 }
@@ -95,9 +95,20 @@ function Get-ProfilerBreakpoints
         $lines = [System.IO.File]::ReadAllLines($PSCmdlet.GetUnresolvedProviderPathFromPSPath($filePath))
         $lineCount = $lines.Count
 
-        $lineNumbers = for ($i = 1; $i -le $lineCount; $i++) { if (-not [string]::IsNullOrWhiteSpace($lines[$i-1])) { $i } }
+        $lineNumbers = @(
+            for ($i = 1; $i -le $lineCount; $i++)
+            {
+                if ($lines[$i - 1] -notmatch '^\s*(?:#\.*)?$')
+                {
+                    $i
+                }
+            }
+        )
 
-        New-ProfilerBreakpoint -Path $filePath -LineNumber $lineNumbers
+        if ($lineNumbers.Count -gt 0)
+        {
+            New-ProfilerBreakpoint -Path $filePath -LineNumber $lineNumbers
+        }
     }
 }
 
