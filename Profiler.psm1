@@ -36,11 +36,18 @@ function Get-ScriptPerfData
         $script:ExecutionLog = @{}
         [uint64] $script:TotalCount = 0
         $script:LastTimestamp = $startTime = [datetime]::UtcNow
+        $script:lastEntry = $null
 
         try
         {
             $null = & $ScriptBlock
         } catch { }
+
+        $now = [datetime]::UtcNow
+        if ($null -ne $script:lastEntry)
+        {
+            $script:lastEntry.TotalMS += ($now - $script:LastTimestamp).TotalMilliseconds
+        }
 
         Get-ProfilerReport -ExecutionLog $script:ExecutionLog -TotalTime ($script:LastTimestamp - $startTime) -TotalCount $script:TotalCount
     }
@@ -137,10 +144,15 @@ function New-ProfilerBreakpoint
                 $script:ExecutionLog.Add($key, $object)
             }
 
-            $object.TotalMS += ($now - $script:lastTimestamp).TotalMilliseconds
-            $object.HitCount++
-            $script:TotalCount++
+            if ($null -ne $script:lastEntry)
+            {
+                $script:lastEntry.TotalMS += ($now - $script:lastTimestamp).TotalMilliseconds
+            }
 
+            $object.HitCount++
+
+            $script:TotalCount++
+            $script:lastEntry = $object
             $script:lastTimestamp = $now
         }
     }
