@@ -71,9 +71,15 @@ function Get-ProfilerReport
         [uint64] $TotalCount
     )
 
-    if ($null -eq $ExecutionLog -or $ExecutionLog.Count -eq 0) { return }
+    if ($null -eq $ExecutionLog -or
+        $ExecutionLog.PSBase.Count -eq 0 -or
+        $TotalCount -eq 0)
+    {
+        return
+    }
 
     $totalMS = $TotalTime.TotalMilliseconds
+    if ($totalMS -eq 0) { $totalMS = 1 } # Unlikely, but just to avoid any divide-by-zero errors here
 
     foreach ($lineInfo in $ExecutionLog.Values)
     {
