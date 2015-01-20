@@ -49,7 +49,7 @@ function Get-ScriptPerfData
             $script:lastEntry.TotalMS += ($now - $script:LastTimestamp).TotalMilliseconds
         }
 
-        Get-ProfilerReport -ExecutionLog $script:ExecutionLog -TotalTime ($script:LastTimestamp - $startTime) -TotalCount $script:TotalCount
+        Get-ProfilerReport -ExecutionLog $script:ExecutionLog -TotalTime ($now - $startTime) -TotalCount $script:TotalCount
     }
     finally
     {
