@@ -7,21 +7,25 @@ Describe 'Get-ScriptPerfData' {
     Context 'Timing sanity checks' {
         Set-Content -LiteralPath TestDrive:\test.ps1 -Value @'
             Write-Verbose Hello
-            Start-Sleep -Milliseconds 200
+            Start-Sleep -Milliseconds 500
             Write-Verbose World
-            Start-Sleep -Milliseconds 100
+            Start-Sleep -Milliseconds 300
 '@
 
         $report = Get-ScriptPerfData -Path TestDrive:\test.ps1 -ScriptBlock { TestDrive:\test.ps1 } |
                   Sort-Object Line
 
+        # Hopefully a 100-ms window is enough to ensure these tests pass when the module
+        # is behaving properly.  The original code only allowed for 50ms, and failed on the
+        # new cloud-based build agents.
+
         It 'Assigns timing values to the correct lines' {
-            $report[0].TotalMilliseconds | Should BeLessThan 10
-            $report[1].TotalMilliseconds | Should BeGreaterThan 150
-            $report[1].TotalMilliseconds | Should BeLessThan 250
-            $report[2].TotalMilliseconds | Should BeLessThan 10
-            $report[3].TotalMilliseconds | Should BeGreaterThan 50
-            $report[3].TotalMilliseconds | Should BeLessThan 150
+            $report[0].TotalMilliseconds | Should BeLessThan 100
+            $report[1].TotalMilliseconds | Should BeGreaterThan 400
+            $report[1].TotalMilliseconds | Should BeLessThan 600
+            $report[2].TotalMilliseconds | Should BeLessThan 100
+            $report[3].TotalMilliseconds | Should BeGreaterThan 200
+            $report[3].TotalMilliseconds | Should BeLessThan 400
         }
     }
 
@@ -43,7 +47,7 @@ Describe 'Get-ScriptPerfData' {
         {
             $hash[[int]($item.Line)] = $item
         }
-        
+
         It 'Assigns the correct hit counts' {
             $hash[1].HitCount | Should Be 1
             $hash[2].HitCount | Should Be 1

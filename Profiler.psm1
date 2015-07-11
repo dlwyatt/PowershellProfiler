@@ -26,7 +26,8 @@ function Get-ScriptPerfData
             }
             else
             {
-                Write-Error "Path resolved to non-powershell script file '$($resolvedPath.Path)'; this item will not be included in the analysis."
+                Write-Error ("Path resolved to non-powershell script file '" + $resolvedPath.Path +
+                             "'; this item will not be included in the analysis.")
             }
         }
 
@@ -49,7 +50,9 @@ function Get-ScriptPerfData
             $script:lastEntry.TotalMS += ($now - $script:LastTimestamp).TotalMilliseconds
         }
 
-        Get-ProfilerReport -ExecutionLog $script:ExecutionLog -TotalTime ($now - $startTime) -TotalCount $script:TotalCount
+        Get-ProfilerReport -ExecutionLog $script:ExecutionLog `
+                           -TotalTime    ($now - $startTime) `
+                           -TotalCount   $script:TotalCount
     }
     finally
     {
