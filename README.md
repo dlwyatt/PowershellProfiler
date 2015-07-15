@@ -1,3 +1,5 @@
+__Build Status:__ [![Build status](https://build.powershell.org/guestAuth/app/rest/builds/buildType:(id:PowerShellProfiler_PublishStatusToGitHub)/statusIcon)](https://build.powershell.org/project.html?projectId=PowerShellProfiler&tab=projectOverview&guest=1)
+
 # PowershellProfiler
 
 This is a script module I've been messing around with to profile other modules.  It works by setting a breakpoint on every line of the scripts that you specify; when these breakpoints are hit, they log how much time has elapsed since the previous breakpoint.  When the execution is finished, you get an array of custom objects (one for each non-whitespace line in the scripts) containing the following pieces of information:
