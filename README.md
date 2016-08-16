@@ -29,6 +29,10 @@ Select-Object -First 20 |
 Format-Table -Property $tableProperties -AutoSize
 ```
 
+Here's a sample of what to expect when you run this tool.
+
+![Alt text](https://github.com/1RedOne/PowershellProfiler/blob/master/Profilier.png?raw=true "The impact of each line is broken down for easy optimization")
+
 The execution of the code that's being profiled will be a fair bit slower than usual, but this slowing effect should be roughly equal for each line of code, so it's still providing useful relative comparison data.  An earlier version of this profiler is what I used to analyze the Pester module recently, and to make some small changes that approximately doubled its overall speed.  (I then turned the profiler on a copy of itself, to produce the current version; the original was much less efficient.)
 
 I'll polish the code up a bit more and add some default output formatting at some point, then release it.  The code currently requires PowerShell 3.0 or later (due to its use of the quick [pscustomobject] accelerator), but a 2.0-compatible version could be created that uses New-Object, at the cost of some speed.
