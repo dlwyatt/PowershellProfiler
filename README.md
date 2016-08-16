@@ -31,7 +31,7 @@ Format-Table -Property $tableProperties -AutoSize
 
 Here's a sample of what to expect when you run this tool.
 
-![Alt text](https://github.com/1RedOne/PowershellProfiler/blob/master/Profilier.png?raw=true "The impact of each line is broken down for easy optimization")
+![Alt text](https://github.com/dlwyatt/PowershellProfiler/blob/master/Profilier.png?raw=true "The impact of each line is broken down for easy optimization")
 
 The execution of the code that's being profiled will be a fair bit slower than usual, but this slowing effect should be roughly equal for each line of code, so it's still providing useful relative comparison data.  An earlier version of this profiler is what I used to analyze the Pester module recently, and to make some small changes that approximately doubled its overall speed.  (I then turned the profiler on a copy of itself, to produce the current version; the original was much less efficient.)
 
